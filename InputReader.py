@@ -1,6 +1,5 @@
 import csv
 
-
 def get_dataset():
     # read file to my_list
     with open('dataset1.csv', newline='') as f:
@@ -32,8 +31,6 @@ def get_dataset():
                 line[i] = float(line[i])
 
     return my_list
-
-# get_dataset()
 
 # for line in my_list:
 #     print(line)
