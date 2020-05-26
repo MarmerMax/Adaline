@@ -1,37 +1,21 @@
 import InputReader
 import numpy as np
+import handleData
 import matplotlib.pyplot as plt
-
 
 # get dataset from file
 dataset = InputReader.get_dataset()
 
-# create sets for train
-train_set_features = np.empty((0, 33), float)
-train_set_diagnoses = np.array([])
-
-# create sets for test
-test_set_features = np.empty((0, 33), float)
-test_set_diagnoses = np.array([])
-
 # calculate number equals to 66% of dataset length
-size = len(dataset)
-train_size = round(size * 0.66)
-test_size = size - train_size
-counter = 0
+train_size, test_size = handleData.getSizeTrainAndTest(dataset, 0.66)
 
-# split dataset 66% - train set, 33% - test set
-for line in dataset:
-    temp_x = np.array(line[2:])
-    temp_y = line[1:2]
-    if counter < train_size:
-        train_set_features = np.vstack((train_set_features, temp_x))
-        train_set_diagnoses = np.append(train_set_diagnoses, [temp_y])
-    else:
-        test_set_features = np.vstack((test_set_features, temp_x))
-        test_set_diagnoses = np.append(test_set_diagnoses, [temp_y])
-    counter += 1
+# create sets for train data, create sets for test data
+train_set_features, train_set_diagnoses, test_set_features, test_set_diagnoses \
+    = handleData.splitData(dataset, train_size, False)
 
+# standardize sets
+train_set_features = handleData.standardization(train_set_features)
+test_set_features = handleData.standardization(test_set_features)
 
 
 # function to predict value
@@ -39,20 +23,9 @@ def predict(test_data):
     return np.where(np.dot(test_data, w[1:]) + w[0] >= 0.0, 1, -1)
 
 
-# function to standardize values
-def standardization(matrix):
-    matrix_std = np.copy(matrix)
-    for i in range(0, len(matrix_std[0])):
-        matrix_std[:, i] = (matrix[:, i] - matrix[:, i].mean()) / matrix[:, i].std()
-    return matrix_std
-
-
-# standardize sets
-train_set_features = standardization(train_set_features)
-test_set_features = standardization(test_set_features)
-
 # create array of weights
 w = np.zeros(1 + train_set_features.shape[1])
+
 # learning rate
 eta = 0.0001
 costs = np.array([])
@@ -67,12 +40,10 @@ for iteration in range(1000):
     costs = np.append(costs, [cost])
 
 # Plot the training error
-plt.plot(range(1, len(costs) + 1),costs, marker = 'o', color = 'red')
+plt.plot(range(1, len(costs) + 1), costs, marker='o', color='red')
 plt.xlabel('Epochs')
 plt.ylabel('Sum-squared-error')
 plt.show()
-
-# print(w)
 
 predicted_recurred = 0
 predicted_not_recurred = 0
@@ -101,7 +72,7 @@ for i in range(0, len(predictions)):
     else:
         actual_not_recurred_and_predicted_not_recurred += 1
 
-
+print(f"First method result: 66%-33%")
 print(f"true positive: {actual_and_predicted_recurred}")
 print(f"false negative: {predicted_not_recurred}")
 print(f"false positive: {predicted_recurred}")

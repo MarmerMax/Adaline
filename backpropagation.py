@@ -11,8 +11,8 @@ train_size, test_size = handleData.getSizeTrainAndTest(dataset, 0.66)
 print("train_size", train_size)
 print("test_size", test_size)
 
-train_set_features, train_set_diagnoses, test_set_features, test_set_diagnoses = handleData.splitData(dataset,
-                                                                                                      train_size)
+train_set_features, train_set_diagnoses, test_set_features, test_set_diagnoses \
+    = handleData.splitData(dataset, train_size, test_size, False)
 
 # standardize sets
 train_set_features = handleData.standardization(train_set_features)
@@ -53,7 +53,8 @@ sess.run(tf.global_variables_initializer())
 for i in range(0, 10000):
     sess.run(update, feed_dict={x: train_set_features, y_: train_set_diagnoses})
     if i % 1000 == 0:
-        print('Iteration:', i, ' W2:', sess.run(w_2), ' b2:', sess.run(b_2), ' loss:', loss.eval(session=sess, feed_dict={x: train_set_features, y_: train_set_diagnoses}))
+        print('Iteration:', i, ' W2:', sess.run(w_2), ' b2:', sess.run(b_2), ' loss:',
+              loss.eval(session=sess, feed_dict={x: train_set_features, y_: train_set_diagnoses}))
 
 
 # function to predict value
@@ -73,10 +74,9 @@ actual_not_recurred_and_predicted_not_recurred = 0
 
 for patient in test_set_diagnoses:
     if patient == 1:
-            actual_recurred += 1
+        actual_recurred += 1
     else:
-            actual_not_recurred += 1
-
+        actual_not_recurred += 1
 
 predictions = predict(test_set_features)
 
@@ -89,7 +89,6 @@ for i in range(0, len(predictions)):
         predicted_recurred += 1
     else:
         actual_not_recurred_and_predicted_not_recurred += 1
-
 
 print(f"true positive: {actual_and_predicted_recurred}")
 print(f"false negative: {predicted_not_recurred}")
