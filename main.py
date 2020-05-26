@@ -31,6 +31,7 @@ for line in dataset:
     counter += 1
 
 
+
 # function to predict value
 def predict(test_data):
     return np.where(np.dot(test_data, w[1:]) + w[0] >= 0.0, 1, -1)
