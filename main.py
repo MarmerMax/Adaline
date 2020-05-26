@@ -1,5 +1,7 @@
 import InputReader
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 # get dataset from file
 dataset = InputReader.get_dataset()
@@ -53,7 +55,7 @@ test_set_features = standardization(test_set_features)
 w = np.zeros(1 + train_set_features.shape[1])
 # learning rate
 eta = 0.0001
-# costs = np.array([])
+costs = np.array([])
 
 # fit the weights
 for iteration in range(1000):
@@ -61,8 +63,14 @@ for iteration in range(1000):
     errors = (train_set_diagnoses - outputs)
     w[1:] += eta * np.dot(train_set_features.T, errors)
     w[0] += eta * errors.sum()
-    # cost = (errors ** 2).sum() / 2.0
-    # costs = np.append(costs, [cost])
+    cost = (errors ** 2).sum() / 2.0
+    costs = np.append(costs, [cost])
+
+# Plot the training error
+plt.plot(range(1, len(costs) + 1),costs, marker = 'o', color = 'red')
+plt.xlabel('Epochs')
+plt.ylabel('Sum-squared-error')
+plt.show()
 
 # print(w)
 

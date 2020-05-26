@@ -46,6 +46,8 @@ loss = tf.reduce_sum(tf.square(y_ - y))
 
 update = tf.train.GradientDescentOptimizer(0.001).minimize(loss)
 
+costs = np.array([])
+
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 for i in range(0, 10000):
@@ -56,8 +58,6 @@ for i in range(0, 10000):
 
 # function to predict value
 def predict(test_data):
-    # print("shape:",test_data.shape)
-    # prediction = np.zeros(len(test_data))
     val = y.eval(session=sess, feed_dict={x: test_data})
     return np.where(val >= 0.5, 1, -1)
 
@@ -77,11 +77,8 @@ for patient in test_set_diagnoses:
     else:
             actual_not_recurred += 1
 
-print("test_set_features",test_set_features)
-print("test_set_features.shape",test_set_features.shape)
 
 predictions = predict(test_set_features)
-print("predictions",predictions)
 
 for i in range(0, len(predictions)):
     if test_set_diagnoses[i] == 1 and predictions[i] == 1:
