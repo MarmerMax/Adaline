@@ -88,3 +88,37 @@ def checkPredictions(target, predictions):
             true_negative += 1
 
     return true_positive, false_negative, false_positive, true_negative
+
+
+def f_score(test_set_diagnoses, test_set_features, predict):
+    predicted_recurred = 0
+    predicted_not_recurred = 0
+
+    actual_recurred = 0
+    actual_not_recurred = 0
+
+    actual_and_predicted_recurred = 0
+    actual_not_recurred_and_predicted_not_recurred = 0
+
+    for patient in test_set_diagnoses:
+        if patient == 1:
+            actual_recurred += 1
+        else:
+            actual_not_recurred += 1
+
+    predictions = predict(test_set_features)
+
+    for i in range(0, len(predictions)):
+        if test_set_diagnoses[i] == 1 and predictions[i] == 1:
+            actual_and_predicted_recurred += 1
+        elif test_set_diagnoses[i] == 1 and predictions[i] == -1:
+            predicted_not_recurred += 1
+        elif test_set_diagnoses[i] == -1 and predictions[i] == 1:
+            predicted_recurred += 1
+        else:
+            actual_not_recurred_and_predicted_not_recurred += 1
+
+    print(f"true positive: {actual_and_predicted_recurred}")
+    print(f"false negative: {predicted_not_recurred}")
+    print(f"false positive: {predicted_recurred}")
+    print(f"true negative: {actual_not_recurred_and_predicted_not_recurred}")
