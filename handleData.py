@@ -59,7 +59,7 @@ def standardization(matrix):
     return matrix_std
 
 
-# calculate positives and negatives items
+# calculate positives and negatives examples
 def calculateActual(targets):
     positives = 0
     negatives = 0
