@@ -1,6 +1,7 @@
 import InputReader
 import numpy as np
 import handleData
+import AdalineAlgorithm
 import matplotlib.pyplot as plt
 
 # get dataset from file
@@ -11,33 +12,17 @@ train_size, test_size = handleData.getSizeTrainAndTest(dataset, 0.66)
 
 # create sets for train data, create sets for test data
 train_set_features, train_set_diagnoses, test_set_features, test_set_diagnoses \
-    = handleData.splitData(dataset, train_size, False)
+    = handleData.splitData(dataset, train_size, test_size, False)
 
 # standardize sets
 train_set_features = handleData.standardization(train_set_features)
 test_set_features = handleData.standardization(test_set_features)
 
-
-# function to predict value
-def predict(test_data):
-    return np.where(np.dot(test_data, w[1:]) + w[0] >= 0.0, 1, -1)
-
-
 # create array of weights
-w = np.zeros(1 + train_set_features.shape[1])
+weights = np.zeros(1 + train_set_features.shape[1])
 
-# learning rate
-eta = 0.0001
-costs = np.array([])
-
-# fit the weights
-for iteration in range(1000):
-    outputs = np.dot(train_set_features, w[1:]) + w[0]
-    errors = (train_set_diagnoses - outputs)
-    w[1:] += eta * np.dot(train_set_features.T, errors)
-    w[0] += eta * errors.sum()
-    cost = (errors ** 2).sum() / 2.0
-    costs = np.append(costs, [cost])
+# train the algorithm on given data and weights
+weights, costs = AdalineAlgorithm.train(train_set_features, train_set_diagnoses, weights, 0.0001)
 
 # Plot the training error
 plt.plot(range(1, len(costs) + 1), costs, marker='o', color='red')
@@ -45,35 +30,18 @@ plt.xlabel('Epochs')
 plt.ylabel('Sum-squared-error')
 plt.show()
 
-predicted_recurred = 0
-predicted_not_recurred = 0
+# predict target of tests features by our weights
+predictions = AdalineAlgorithm.predict(test_set_features, weights, 0.0, 1, -1)
 
-actual_recurred = 0
-actual_not_recurred = 0
+# calculate real positives and negatives examples
+actual_recurred, actual_not_recurred = handleData.calculateActual(test_set_diagnoses)
 
-actual_and_predicted_recurred = 0
-actual_not_recurred_and_predicted_not_recurred = 0
-
-for patient in test_set_diagnoses:
-    if patient == 1:
-        actual_recurred += 1
-    else:
-        actual_not_recurred += 1
-
-predictions = predict(test_set_features)
-
-for i in range(0, len(predictions)):
-    if test_set_diagnoses[i] == 1 and predictions[i] == 1:
-        actual_and_predicted_recurred += 1
-    elif test_set_diagnoses[i] == 1 and predictions[i] == -1:
-        predicted_not_recurred += 1
-    elif test_set_diagnoses[i] == -1 and predictions[i] == 1:
-        predicted_recurred += 1
-    else:
-        actual_not_recurred_and_predicted_not_recurred += 1
+# check prediction correctness
+true_positive, false_negative, false_positive, true_negative = handleData.checkPredictions(test_set_diagnoses,
+                                                                                           predictions)
 
 print(f"First method result: 66%-33%")
-print(f"true positive: {actual_and_predicted_recurred}")
-print(f"false negative: {predicted_not_recurred}")
-print(f"false positive: {predicted_recurred}")
-print(f"true negative: {actual_not_recurred_and_predicted_not_recurred}")
+print(f"true positive: {round(true_positive / actual_recurred, 2)}%")
+print(f"false negative: {round(false_negative / actual_recurred, 2)}%")
+print(f"false positive: {round(false_positive / actual_not_recurred, 2)}%")
+print(f"true negative: {round(true_negative / actual_not_recurred, 2)}%")

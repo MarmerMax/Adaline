@@ -57,3 +57,34 @@ def standardization(matrix):
     for i in range(0, len(matrix_std[0])):
         matrix_std[:, i] = (matrix[:, i] - matrix[:, i].mean()) / matrix[:, i].std()
     return matrix_std
+
+
+# calculate positives and negatives items
+def calculateActual(targets):
+    positives = 0
+    negatives = 0
+    for item in targets:
+        if item == 1:
+            positives += 1
+        else:
+            negatives += 1
+
+    return positives, negatives
+
+# calculate prediction correctness
+def checkPredictions(target, predictions):
+    true_positive = 0
+    false_negative = 0
+    false_positive = 0
+    true_negative = 0
+    for i in range(0, len(predictions)):
+        if target[i] == 1 and predictions[i] == 1:
+            true_positive += 1
+        elif target[i] == 1 and predictions[i] == -1:
+            false_negative += 1
+        elif target[i] == -1 and predictions[i] == 1:
+            false_positive += 1
+        else:
+            true_negative += 1
+
+    return true_positive, false_negative, false_positive, true_negative
