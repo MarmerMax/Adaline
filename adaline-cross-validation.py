@@ -32,6 +32,7 @@ test_set_features_2 = handleData.standardization(test_set_features_2)
 train_set_features_3 = handleData.standardization(train_set_features_3)
 test_set_features_3 = handleData.standardization(test_set_features_3)
 
+print("first features set:")
 # working on first features set
 # 1. create array of weights
 # 2. train first set
@@ -44,15 +45,16 @@ predictions_1 = AdalineAlgorithm.predict(test_set_features_1, weights_1, 0.0, 1,
 actual_recurred_1, actual_not_recurred_1 = handleData.calculateActual(test_set_diagnoses_1)
 true_positive_1, false_negative_1, false_positive_1, true_negative_1 = handleData.checkPredictions(test_set_diagnoses_1,
                                                                                                    predictions_1)
-
+print("second features set:")
 # working on second features set
 weights_2 = np.zeros(1 + train_set_features_2.shape[1])
 weights_2, costs_2 = AdalineAlgorithm.train(train_set_features_2, train_set_diagnoses_2, weights_2, 0.0001)
 predictions_2 = AdalineAlgorithm.predict(test_set_features_2, weights_2, 0.0, 1, -1)
 actual_recurred_2, actual_not_recurred_2 = handleData.calculateActual(test_set_diagnoses_2)
 true_positive_2, false_negative_2, false_positive_2, true_negative_2 = handleData.checkPredictions(test_set_diagnoses_2,
-                                                                                                   predictions_2)
 
+                                                                                                   predictions_2)
+print("third features set:")
 # working on third features set
 weights_3 = np.zeros(1 + train_set_features_3.shape[1])
 weights_3, costs_3 = AdalineAlgorithm.train(train_set_features_3, train_set_diagnoses_3, weights_3, 0.0001)
