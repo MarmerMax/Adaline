@@ -92,40 +92,4 @@ print(f"true positive: {round(sum_true_positive / 3, 2)}%")
 print(f"true negative: {round(sum_true_negative / 3, 2)}%")
 print(f"Code execution time: {round(time.time() - start_time, 2)} seconds")
 
-backprop = False
 
-#####
-# back-prop with cross-validation
-#####
-if backprop:
-    print("###########\n Back-Propagation\n ###########")
-    train_set_diagnoses_1 = train_set_diagnoses_1.reshape(train_set_diagnoses_1.shape[0], -1)  # (128,) -> (128,1)
-    train_set_diagnoses_2 = train_set_diagnoses_2.reshape(train_set_diagnoses_2.shape[0], -1)  # (128,) -> (128,1)
-    train_set_diagnoses_3 = train_set_diagnoses_3.reshape(train_set_diagnoses_3.shape[0], -1)  # (128,) -> (128,1)
-
-    # train set 1
-    x_1, y_1, sess_1, costs_back_1 = backpropagation.train(train_set_features_1,train_set_diagnoses_1)
-    # train set 2
-    x_2, y_2, sess_2, costs_back_2 = backpropagation.train(train_set_features_2,train_set_diagnoses_2)
-    # train set 3
-    x_3, y_3, sess_3, costs_back_3 = backpropagation.train(train_set_features_3,train_set_diagnoses_3)
-
-
-    # Plot the training error
-    plt.plot(range(1 * 1000, (len(costs_back_1) + 1) * 1000, 1000), costs_back_1, color='red', label='set1', linewidth=5.0)
-    plt.plot(range(1 * 1000, (len(costs_back_2) + 1) * 1000, 1000), costs_back_2, color='green', label='set2', linewidth=5.0)
-    plt.plot(range(1 * 1000, (len(costs_back_3) + 1) * 1000, 1000), costs_back_3, color='blue', label='set3', linewidth=5.0)
-    plt.xlabel('Epochs')
-    plt.ylabel('Sum-squared-error')
-    plt.legend(loc='best')
-    plt.show()
-
-    # test 1
-    print("##set1:")
-    handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_1,y_1,sess_1,test_set_features_1))
-    # test 2
-    print("##set2:")
-    handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_2,y_2,sess_2,test_set_features_2))
-    # test 3
-    print("##set3:")
-    handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_3,y_3,sess_3,test_set_features_3))
