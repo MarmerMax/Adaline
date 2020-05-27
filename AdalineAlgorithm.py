@@ -2,10 +2,10 @@ import numpy as np
 
 
 # function to train and fix weights
-def train(features, targets, weights, learning_rate):
+def train(features, targets, weights, learning_rate, epochs):
     costs = np.array([])
 
-    for iteration in range(1000):
+    for iteration in range(epochs):
         outputs = np.dot(features, weights[1:]) + weights[0]
         errors = (targets - outputs)
         weights[1:] += learning_rate * np.dot(features.T, errors)

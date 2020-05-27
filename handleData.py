@@ -71,6 +71,7 @@ def calculateActual(targets):
 
     return positives, negatives
 
+
 # calculate prediction correctness
 def checkPredictions(target, predictions):
     true_positive = 0
@@ -87,31 +88,26 @@ def checkPredictions(target, predictions):
         else:
             true_negative += 1
 
+    return true_positive, false_negative, false_positive, true_negative
+
+
+def checkScore(true_positive, false_negative, false_positive, true_negative):
     print(f"true positive: {true_positive}")
     print(f"false negative: {false_negative}")
     print(f"false positive: {false_positive}")
     print(f"true negative: {true_negative}\n")
 
-    checkScore(true_positive, false_negative, false_positive, true_negative)
-
-    return true_positive, false_negative, false_positive, true_negative
-
-
-
-def checkScore(true_positive, false_negative,false_positive,true_negative):
     total_all = true_positive + false_negative + false_positive + true_negative
-    total_true =  true_positive + true_negative # total really positive
-    acc = total_true /total_all
-    total_positive = true_positive +false_positive # total classified as positive
+    total_true = true_positive + true_negative  # total really positive
+    acc = total_true / total_all
+    total_positive = true_positive + false_positive  # total classified as positive
     try:
-        precision= true_positive / total_positive
-        recall = true_positive/(true_positive + false_negative)
-        f_score = (2*recall*precision) / (recall + precision)
-        print(f"acc: {acc}")
-        print(f"precision: {precision}")
-        print(f"recall: {recall}")
-        print(f"f_score: {f_score}\n")
+        precision = true_positive / total_positive
+        recall = true_positive / (true_positive + false_negative)
+        f_score = (2 * recall * precision) / (recall + precision)
+        print(f"accuracy: {round(acc, 2)}")
+        print(f"precision: {round(precision, 2)}")
+        print(f"recall: {round(recall, 2)}")
+        print(f"f_score: {round(f_score, 2)}\n")
     except ZeroDivisionError:
         print("all cases have been predicted to be negative or no positive cases in the input data")
-
-

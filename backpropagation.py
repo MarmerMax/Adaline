@@ -6,9 +6,7 @@ import matplotlib.pyplot as plt
 import time
 
 
-
 def train(features, targets):
-
     features_size = len(features[0])
     output = 1
 
@@ -40,12 +38,11 @@ def train(features, targets):
             #       loss.eval(session=sess, feed_dict={x: features, y_: targets}))
             costs = np.append(costs, [loss.eval(session=sess, feed_dict={x: features, y_: targets})])
 
-
     return x, y, sess, costs
 
 
 # function to predict value
-def predict(x, y,sess,features_test):
+def predict(x, y, sess, features_test):
     val = y.eval(session=sess, feed_dict={x: features_test})
     return np.where(val >= 0.5, 1, -1)
 
@@ -79,7 +76,6 @@ test_set_features_2 = handleData.standardization(test_set_features_2)
 train_set_features_3 = handleData.standardization(train_set_features_3)
 test_set_features_3 = handleData.standardization(test_set_features_3)
 
-
 #####
 # back-prop with cross-validation
 #####
@@ -89,12 +85,11 @@ train_set_diagnoses_2 = train_set_diagnoses_2.reshape(train_set_diagnoses_2.shap
 train_set_diagnoses_3 = train_set_diagnoses_3.reshape(train_set_diagnoses_3.shape[0], -1)  # (128,) -> (128,1)
 
 # train set 1
-x_1, y_1, sess_1, costs_back_1 = backpropagation.train(train_set_features_1,train_set_diagnoses_1)
+x_1, y_1, sess_1, costs_back_1 = backpropagation.train(train_set_features_1, train_set_diagnoses_1)
 # train set 2
-x_2, y_2, sess_2, costs_back_2 = backpropagation.train(train_set_features_2,train_set_diagnoses_2)
+x_2, y_2, sess_2, costs_back_2 = backpropagation.train(train_set_features_2, train_set_diagnoses_2)
 # train set 3
-x_3, y_3, sess_3, costs_back_3 = backpropagation.train(train_set_features_3,train_set_diagnoses_3)
-
+x_3, y_3, sess_3, costs_back_3 = backpropagation.train(train_set_features_3, train_set_diagnoses_3)
 
 # Plot the training error
 plt.plot(range(1 * 1000, (len(costs_back_1) + 1) * 1000, 1000), costs_back_1, color='red', label='set1', linewidth=5.0)
@@ -107,10 +102,10 @@ plt.show()
 
 # test 1
 print("##set1:")
-handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_1,y_1,sess_1,test_set_features_1))
+handleData.checkPredictions(test_set_diagnoses_1, backpropagation.predict(x_1, y_1, sess_1, test_set_features_1))
 # test 2
 print("##set2:")
-handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_2,y_2,sess_2,test_set_features_2))
+handleData.checkPredictions(test_set_diagnoses_1, backpropagation.predict(x_2, y_2, sess_2, test_set_features_2))
 # test 3
 print("##set3:")
-handleData.checkPredictions(test_set_diagnoses_1,backpropagation.predict(x_3,y_3,sess_3,test_set_features_3))
+handleData.checkPredictions(test_set_diagnoses_1, backpropagation.predict(x_3, y_3, sess_3, test_set_features_3))
