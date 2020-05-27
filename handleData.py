@@ -103,11 +103,15 @@ def checkScore(true_positive, false_negative,false_positive,true_negative):
     total_true =  true_positive + true_negative # total really positive
     acc = total_true /total_all
     total_positive = true_positive +false_positive # total classified as positive
-    precision= true_positive / total_positive
-    recall = true_positive/(true_positive+ false_negative)
-    f_score = (2*recall*precision) / (recall + precision)
+    try:
+        precision= true_positive / total_positive
+        recall = true_positive/(true_positive + false_negative)
+        f_score = (2*recall*precision) / (recall + precision)
+        print(f"acc: {acc}")
+        print(f"precision: {precision}")
+        print(f"recall: {recall}")
+        print(f"f_score: {f_score}\n")
+    except ZeroDivisionError:
+        print("all cases have been predicted to be negative or no positive cases in the input data")
 
-    print(f"acc: {acc}")
-    print(f"precision: {precision}")
-    print(f"recall: {recall}")
-    print(f"f_score: {f_score}\n")
+
